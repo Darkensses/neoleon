@@ -101,6 +101,7 @@ function App() {
   return (
     <div className="App">
       <div className="App__credits">
+        <a href="https://www.facebook.com/neoleon2025" target="_blank" rel="noopener noreferrer">Neoleon 2025</a>
         <a href="https://github.com/Darkensses/neoleon" target="_blank" rel="noopener noreferrer">Github</a>
         <a href="https://github.com/Darkensses" target="_blank" rel="noopener noreferrer">@Darkensses</a>
         <a href="https://github.com/Laborico" target="_blank" rel="noopener noreferrer">@Laborico</a>        
