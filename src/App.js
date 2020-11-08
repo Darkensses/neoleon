@@ -22,7 +22,7 @@ function CerroModel() {
       rotation={[(-2 * Math.PI) / 180, (110 * Math.PI) / 180, 0]}
     >
       <mesh {...model.nodes["EXPORT_GOOGLE_SAT_WM"]}>
-        <meshBasicMaterial attach="material" color="#00eece" wireframe fog={false}/>
+        <meshBasicMaterial attach="material" color="#448AFF" wireframe fog={false}/>
       </mesh>
     </group>
   );
@@ -36,7 +36,7 @@ const GridShader = new THREE.ShaderMaterial({
   uniforms: {
     time: { value: 0 },
     limits: { value: new THREE.Vector2(-limit, limit) },
-    speed: { value: 15 },
+    speed: { value: 1 },
   },
   vertexShader: `
   uniform float time;
@@ -97,7 +97,7 @@ function GridPlane() {
       ref={grid}
       args={[limit * 2, division, "#00eece", "#00eece"]}
       material={GridShader}  
-      material-uniforms-speed-value={15}    
+      material-uniforms-speed-value={1}    
     />    
   );
 }
@@ -126,7 +126,7 @@ function City () {
       })         
     }
     return {sideLeft, sideRight};
-  });
+  },[cityLimit]);
 
   useLayoutEffect(() => {
     
@@ -149,7 +149,7 @@ function City () {
       ref.current.setMatrixAt(i+150, dummy.matrix)
     });
     ref.current.instanceMatrix.needsUpdate = true    
-  }, [])
+  }, [builds.sideLeft, builds.sideRight, dummy])
 
   return(
     <>
@@ -186,7 +186,7 @@ function Effects() {
     <effectComposer ref={composer} args={[gl]}>
       <renderPass attachArray="passes" scene={scene} camera={camera} />
       <filmPass attachArray="passes" args={[0.25, 0.4, 640, false]} />
-      <unrealBloomPass attachArray="passes" args={[aspect, 2, 1, 0.45]} />
+      <unrealBloomPass attachArray="passes" args={[aspect, 2.9, 0, 0.24]} />
     </effectComposer>
   )
 }
@@ -204,8 +204,10 @@ function App() {
       <Canvas 
         camera={{ position: [0, 30, 100], rotation:[-0.30,0,0], fov: 60 }} 
         onClick={()=>console.log(ref.current.object)}
-        onCreated={({ gl }) => {          
-          gl.setClearColor(new THREE.Color('#17001a'))
+        onCreated={({ gl }) => {      
+          gl.clear(true,true,true)    
+          gl.clearColor()
+          gl.setClearColor(new THREE.Color(0x17001a))
         }}
       >
         <Effects/>
@@ -213,14 +215,14 @@ function App() {
           radius={100} // Radius of the inner sphere (default=100)
           depth={50} // Depth of area where stars should fit (default=50)
           count={5000} // Amount of stars (default=5000)
-          factor={4} // Size factor (default=4)
+          factor={6} // Size factor (default=4)
           saturation={0} // Saturation 0-1 (default=0)
           fade // Faded dots (default=false)          
         />                
         <Suspense fallback="Loading...">
           <CerroModel />
         </Suspense>
-        <fog attach="fog" args={['#17001a', 50, 120]} />
+        <fog attach="fog" args={[0x17001a, 50, 120]} />
         <Floor/>
         <GridPlane />
         <City/>
